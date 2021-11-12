@@ -77,7 +77,7 @@ pipeline {
         expression { doError == '0' }
     }
     steps {
-        echo "Success :)"
+        echo "Success :]"
     }
 }
   }

@@ -9,13 +9,13 @@ pipeline {
   environment {
     //put your environment variables
     doError = '0'
-    DOCKER_REPO = "12345678.dkr.ecr.ap-south-1.amazonaws.com/${JOB_NAME}"
-    AWS_DEFAULT_REGION = "ap-south-1"
+    DOCKER_REPO = "12345678.dkr.ecr.us-east-1.amazonaws.com/${JOB_NAME}"
+    AWS_DEFAULT_REGION = "us-east-1"
     CHART_DIR="$JENKINS_HOME/workspace/helm-integration/helm"
     HELM_RELEASE_NAME = "api-service"
     ENV= """${sh(
   		returnStdout: true,
-  		script: 'declare -n ENV=${GIT_BRANCH}_env ; echo "$ENV"'
+  		script: declare -n ENV=${GIT_BRANCH}_env ; echo $ENV ;
     ).trim()}"""
   }
     options {
@@ -35,7 +35,7 @@ pipeline {
     stage ('Artefact') {
       steps {
         sh '''
-        $(aws ecr get-login --region ap-south-1 --no-include-email)
+        $(aws ecr get-login --region us-east-1 --no-include-email)
         docker push ${DOCKER_REPO}:${BUILD_NUMBER}
         '''
         }

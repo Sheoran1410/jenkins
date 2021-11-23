@@ -10,22 +10,22 @@ pipeline{
 		
     	stage('Build') {
 			steps {
-				sh 'docker build -t sheoranaks99/npipeline:latest .'
+				sh 'sudo docker build -t sheoranaks99/npipeline:latest .'
 			}
 		}
 		
 	    stage('Login and Image Push') {
 			steps {
 			   withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerhubpwd', usernameVariable: 'dockerhubusr')]) {
-			        sh 'docker login -u ${dockerhubusr}  -p ${dockerhubpwd}'
-			        sh 'docker push sheoranaks99/npipeline:latest'
+			        sh 'sudo docker login -u ${dockerhubusr}  -p ${dockerhubpwd}'
+			        sh 'sudo docker push sheoranaks99/npipeline:latest'
 			    }
 			}
 		}
 		
 	   	stage('Build remove') {
 			steps {
-				sh 'docker rmi sheoranaks99/npipeline:latest'
+				sh 'sudo docker rmi sheoranaks99/npipeline:latest'
 			}
 		}
 	   

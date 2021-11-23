@@ -1,17 +1,16 @@
 pipeline{
 	agent any
 	stages {
-	   
 	    stage('gitclone') {
 			steps {
 			    sh 'rm -rf jenkins-test'
-				checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/vinayakgautam-vg/jenkins-test.git']]])
+				checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/Sheoran1410/jenkins-test']]])
 			}
 		}
 		
     	stage('Build') {
 			steps {
-				sh 'docker build -t 976089/npipeline:latest .'
+				sh 'docker build -t sheoranaks99/npipeline:latest .'
 			}
 		}
 		
@@ -19,14 +18,14 @@ pipeline{
 			steps {
 			   withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerhubpwd', usernameVariable: 'dockerhubusr')]) {
 			        sh 'docker login -u ${dockerhubusr}  -p ${dockerhubpwd}'
-			        sh 'docker push 976089/npipeline:latest'
+			        sh 'docker push sheoranaks99/npipeline:latest'
 			    }
 			}
 		}
 		
 	   	stage('Build remove') {
 			steps {
-				sh 'docker rmi 976089/npipeline:latest'
+				sh 'docker rmi sheoranaks99/npipeline:latest'
 			}
 		}
 	   
@@ -34,7 +33,7 @@ pipeline{
 	        steps{
 	            sshagent(['instance_k8s']) {
 	                sh 'rm -rf npipeline'
-	                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/vinayakgautam-vg/npipeline-helm.git']]])
+	                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/Sheoran1410/npipeline-helm']]])
                     sh 'ls -la'
                     sh 'pwd'
                     script {

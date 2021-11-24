@@ -11,6 +11,7 @@ pipeline{
     	stage('Build') {
 			steps {
 				sh 'docker build -t sheoranaks99/npipeline:latest .'
+				sh 'docker image list'
 			}
 		}
 		
@@ -31,9 +32,10 @@ pipeline{
 	   
 	    stage('Git Clone Helm Chart') {
 	        steps{
-	            sshagent(['instance_k8s']) {
+	            sshagent(credentials:['sheoran-jenkins']) {
 	                sh 'rm -rf npipeline'
-	                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/Sheoran1410/npipeline-helm']]])
+	                kubernetesDeploy(kubeconfigId: "mykubeconfig")
+	                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/Sheoran1410/npipeline-helm.git']]])
                     sh 'ls -la'
                     sh 'pwd'
                     script {
